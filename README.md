@@ -1,3 +1,4 @@
+
 # text2pic  
   
 ## Description  
@@ -10,16 +11,20 @@
 ## Functions  
 
 > Create new picture with Configure
-> `pic := text2pic.NewTextPicture(text2pic.Configure{Width: 720, })`
+ 
+`pic := text2pic.NewTextPicture(text2pic.Configure{Width: 720, })`
 
 > Add text line to picture with font, color and padding 
-> `pic.AddTextLine(" The Turkish lira plunged as much as 11% against the dollar", 13, f, text2pic.ColorBlue, text2pic.Padding{Left: 20, Right: 20, Bottom: 30})`
+
+`pic.AddTextLine(" The Turkish lira plunged as much as 11% against the dollar", 13, f, text2pic.ColorBlue, text2pic.Padding{Left: 20, Right: 20, Bottom: 30})`
 
 > Add picture  io.reader is required and padding as well
-> `pic.AddPictureLine(file, text2pic.Padding{Bottom: 20})`
+
+`pic.AddPictureLine(file, text2pic.Padding{Bottom: 20})`
 
 > Draw it on io.writer. TypePng and TypeJpeg are supported
-> `pic.Draw(writer, text2pic.TypeJpeg)`
+
+`pic.Draw(writer, text2pic.TypeJpeg)`
 
 
 ## Example  
