@@ -12,6 +12,7 @@ import (
 	"image/jpeg"
 	"io"
 	"github.com/nfnt/resize"
+	"image/png"
 )
 
 var (
@@ -30,7 +31,7 @@ type textLine struct {
 	fontsize float64
 	text     string
 	font     *truetype.Font
-	padding  int
+	padding  Padding
 	color 	 image.Image
 }
 
@@ -55,11 +56,11 @@ func (this *textLine) draw(width int, pt *fixed.Point26_6, image draw.Image) err
 	//	image.Set(10+i, 10, ruler)
 	//}
 
-	//line define
-	pts := freetype.Pt(0, 0+int(c.PointToFixed(this.fontsize)>>6))
+	//line define adjust padding
+	width -= this.padding.Right
+	pts := freetype.Pt(this.padding.Left, this.padding.Top+int(c.PointToFixed(this.fontsize)>>6))
 	pt.X = pts.X
 	pt.Y = pt.Y + pts.Y
-	fmt.Println("pt:",pt, "- pts:", pts)
 	index := 0
 	lastwidth := 0
 	for i := 1 ; i <= len(this.text); i++ {
@@ -92,8 +93,8 @@ func (this *textLine) draw(width int, pt *fixed.Point26_6, image draw.Image) err
 		lastwidth = rpts.X.Floor()
 
 	}
-	//add padding
-	padding := freetype.Pt(0, 0+this.padding)
+	//add buttom padding
+	padding := freetype.Pt(0, 0+this.padding.Bottom)
 	pt.Y = pt.Y + padding.Y
 	return nil
 }
@@ -117,10 +118,8 @@ func (this *textLine) getHeight(width int, image draw.Image) int {
 	if rpt.X.Floor() %width > 0 {
 		lines++
 	}
-
-	fmt.Println("------", lines)
 	//add padding
-	return int(c.PointToFixed(this.fontsize)>>6) *lines + 10 + this.padding
+	return int(c.PointToFixed(this.fontsize)>>6) *lines + 10 + this.padding.Bottom + this.padding.Top
 }
 
 
@@ -138,29 +137,34 @@ func (this *reader) Read(p []byte) (n int, err error){
 
 type pictureLine struct {
 	reader  io.Reader
-	padding int
+	padding Padding
 	img	image.Image
 }
 
 func (this *pictureLine) draw(width int, pt *fixed.Point26_6, img draw.Image) error {
-	fmt.Println("picture:",pt)
-	draw.Draw(img, this.img.Bounds().Add(image.Pt(0, pt.Y.Floor())) ,this.img, this.img.Bounds().Min  ,draw.Src)
+	draw.Draw(img, this.img.Bounds().Add(image.Pt(width/10, pt.Y.Floor())) ,this.img, this.img.Bounds().Min  ,draw.Src)
 	//add padding
-	padding := freetype.Pt(0, 0+this.padding + this.img.Bounds().Max.Y)
+	padding := freetype.Pt(0, 0+this.padding.Bottom + this.img.Bounds().Max.Y)
 	pt.Y = pt.Y + padding.Y
 
 	return nil
 }
 
 func (this *pictureLine) getHeight(width int, image draw.Image) int {
+	//try png and jpeg to decode
 	img, e := jpeg.Decode(this.reader)
+	if e != nil {
+		fmt.Println(e)
+		img, e  = png.Decode(this.reader)
+		if e != nil {
+			fmt.Println(e)
+			return 0
+		}
+	}
 
-	//resize
-	// resize to width 1000 using Lanczos resampling
-	// and preserve aspect ratio
-	m := resize.Resize(uint(width), 0, img, resize.Lanczos3)
 
+	// resize to 80% of the width using Lanczos resampling
+	m := resize.Resize(uint(width/5*4), 0, img, resize.Lanczos3)
 	this.img = m
-	fmt.Println(img.Bounds(), m.Bounds(), e)
-	return m.Bounds().Size().Y + this.padding
+	return m.Bounds().Size().Y + this.padding.Bottom + this.padding.Top
 }
