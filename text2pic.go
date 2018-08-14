@@ -64,20 +64,6 @@ func (this *TextPicture) AddPictureLine(reader io.Reader, padding Padding) {
 	this.lines = append(this.lines, picline)
 }
 
-type writer struct {
-	buf []byte
-}
-
-func (this *writer) Write(p []byte) (n int, err error) {
-	this.buf = make([]byte, len(p))
-	this.buf = p
-	return len(this.buf), nil
-}
-
-func (this *writer) Get() []byte {
-	return this.buf
-}
-
 func (this *TextPicture) Draw(writer io.Writer, filetype int) error {
 	var err error
 	// Initialize the context.
