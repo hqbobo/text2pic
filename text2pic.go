@@ -1,7 +1,6 @@
 package text2pic
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/math/fixed"
@@ -11,7 +10,6 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io"
-	"os"
 )
 
 type Color image.Image
@@ -22,6 +20,8 @@ var (
 	ColorBlue  = image.NewUniform(color.RGBA{0x00, 0x00, 0xFF, 0xff})
 	ColorWhite = image.White
 	ColorBlack = image.Black
+	TypePng = 1
+	TypeJpeg = 2
 )
 
 type Padding struct {
@@ -78,60 +78,37 @@ func (this *writer) Get() []byte {
 	return this.buf
 }
 
-func (this *TextPicture) Draw() error {
+func (this *TextPicture) Draw(writer io.Writer, filetype int) error {
+	var err error
 	// Initialize the context.
 	bg := image.White
-
 	height := 0
 	width := this.conf.Width
-
 	rgba := image.NewRGBA(image.Rect(0, 0, width, height))
 
 	for _, v := range this.lines {
 		height += v.getHeight(width, rgba)
 	}
 	rgba = image.NewRGBA(image.Rect(0, 0, width, height))
-	fmt.Println("bg size:", width, ":", height)
 	draw.Draw(rgba, rgba.Bounds(), bg, image.ZP, draw.Src)
-
 	pt := fixed.Point26_6{X: fixed.Int26_6(0), Y: fixed.Int26_6(0)}
 	for _, v := range this.lines {
 		if e := v.draw(this.conf.Width, &pt, rgba); e != nil {
 			fmt.Println("draw error :", e)
 		}
 	}
+	if filetype == TypePng {
+		err = png.Encode(writer, rgba)
+		if err != nil {
+			return err
 
-	// Save that RGBA image to disk.
-	outFile, err := os.Create("out.png")
-	if err != nil {
-		return err
+		}
+	} else {
+		err = jpeg.Encode(writer, rgba, nil)
+		if err != nil {
+			return err
+
+		}
 	}
-	defer outFile.Close()
-	b := bufio.NewWriter(outFile)
-	err = png.Encode(b, rgba)
-	if err != nil {
-		return err
-
-	}
-
-	err = b.Flush()
-	if err != nil {
-		return err
-
-	}
-	buf := new(writer)
-	b1 := bufio.NewWriter(buf)
-	err = jpeg.Encode(b1, rgba, nil)
-	if err != nil {
-		return err
-
-	}
-	err = b1.Flush()
-	if err != nil {
-		return err
-
-	}
-	//fmt.Println(buf.Get())
-	fmt.Println("Wrote out.png OK.")
 	return nil
 }

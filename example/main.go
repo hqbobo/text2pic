@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"bufio"
 )
 
 func main() {
@@ -52,6 +53,18 @@ func main() {
 	pic.AddTextLine("3.For English", 20, f, text2pic.ColorRed, text2pic.Padding{Bottom: 20})
 	pic.AddTextLine(" The Turkish lira plunged as much as 11% against the dollar, hitting a record low, before recovering some of its losses in volatile trading. The lira had already plummeted more than 20% last week as a political clash with the United States intensified and investors fretted about the Turkish government's lack of action to tackle the problems plaguing its economy.  ", 13, f, text2pic.ColorBlue, text2pic.Padding{Left: 20, Right: 20, Bottom: 30})
 
-	fmt.Println(pic.Draw())
+	// Save that RGBA image to disk.
+	outFile, err := os.Create("out.jpg")
+	if err != nil {
+		return
+	}
+	defer outFile.Close()
+	b := bufio.NewWriter(outFile)
+
+	fmt.Println(pic.Draw(b, text2pic.TypeJpeg))
+	e := b.Flush()
+	if e!=nil {
+		fmt.Println(e)
+	}
 
 }

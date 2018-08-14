@@ -124,17 +124,6 @@ func (this *textLine) getHeight(width int, image draw.Image) int {
 
 
 
-type reader struct {
-	buf []byte
-}
-
-func (this *reader) Read(p []byte) (n int, err error){
-	p = this.buf
-	return len(p), nil
-}
-
-
-
 type pictureLine struct {
 	reader  io.Reader
 	padding Padding
