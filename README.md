@@ -28,7 +28,7 @@
 
 
 ## Example  
-> Example see in the example directory
+> [Source Code](https://github.com/hqbobo/text2pic/tree/master/example)  see in the example directory
 
 ```
 package main
