@@ -6,7 +6,7 @@ convert text into picture
 
 ##example
 
-`
+`<
 package main
 
 import (
@@ -74,6 +74,4 @@ func main() {
 		fmt.Println(e)
 	}
 
-}
-
-`
+}>`
