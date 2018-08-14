@@ -28,9 +28,7 @@ func main() {
 	//define New picture with given width in px
 	//the height will be calucated before draw on picture
 	//picture will be resize to 80% of the width you given
-	pic := text2pic.NewTextPicture(text2pic.Configure{
-		Width: 720,
-	})
+	pic := text2pic.NewTextPicture(text2pic.Configure{Width: 720, })
 
 	//add chinese line
 	pic.AddTextLine("1.这个是标题", 20, f, text2pic.ColorRed, text2pic.Padding{Left: 20, Top: 10, Bottom: 20})

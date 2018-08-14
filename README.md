@@ -1,13 +1,29 @@
-# text2pic
+# text2pic  
+  
+## Description  
+  
+>Convert text into pictures, this is designed for posting long text message to weibo initially.  
+  
+1. paint text on picture.  
+2. support jpg and png as well  
+  
+## Functions  
 
-## Description
+> Create new picture with Configure
+`pic := text2pic.NewTextPicture(text2pic.Configure{Width: 720, })`
 
-Convert text into pictures, this is designed for posting long text message to weibo initially.
+> Add text line to picture with font, color and padding 
+`pic.AddTextLine(" The Turkish lira plunged as much as 11% against the dollar", 13, f, text2pic.ColorBlue, text2pic.Padding{Left: 20, Right: 20, Bottom: 30})`
 
-1. paint text on picture.
-2. support jpg and png as well
+> Add picture  io.reader is required and padding as well
+`pic.AddPictureLine(file, text2pic.Padding{Bottom: 20})`
 
-## example
+> Draw it on io.writer. TypePng and TypeJpeg are supported
+`pic.Draw(writer, text2pic.TypeJpeg)`
+
+
+## Example  
+> Example see in the example directory
 
 ```
 package main
