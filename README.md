@@ -12,7 +12,7 @@
 
 > Create new picture with Configure
  
-`pic := text2pic.NewTextPicture(text2pic.Configure{Width: 720, })`
+`pic := text2pic.NewTextPicture(text2pic.Configure{Width: 720, BgColor:text2pic.ColorWhite})`
 
 > Add text line to picture with font, color and padding 
 
