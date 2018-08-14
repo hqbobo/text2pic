@@ -12,8 +12,6 @@ import (
 )
 
 func main() {
-	flag.Parse()
-
 	// Read the font data.
 	fontBytes, err := ioutil.ReadFile("FZHTJW.TTF")
 	if err != nil {
