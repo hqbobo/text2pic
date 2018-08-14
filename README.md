@@ -1,13 +1,15 @@
 # text2pic
 
 ## Description
-convert text into picture
 
+Convert text into pictures, this is designed for posting long text message to weibo initially.
+
+1. paint text on picture.
+2. support jpg and png as well
 
 ## example
+
 ```
-
-
 package main
 
 import (
