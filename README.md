@@ -26,7 +26,6 @@
 
 `pic.Draw(writer, text2pic.TypeJpeg)`
 
-
 ## Example  
 > [Source Code](https://github.com/hqbobo/text2pic/tree/master/example)  see in the example directory
 ![output.jpg](https://github.com/hqbobo/text2pic/blob/master/example/out.jpg)

@@ -20,19 +20,20 @@ var (
 	ColorBlue  = image.NewUniform(color.RGBA{0x00, 0x00, 0xFF, 0xff})
 	ColorWhite = image.White
 	ColorBlack = image.Black
-	TypePng = 1
-	TypeJpeg = 2
+	TypePng    = 1
+	TypeJpeg   = 2
 )
 
 type Padding struct {
-	Left   int
-	Right  int
-	Bottom int
-	Top    int
+	Left      int
+	Right     int
+	Bottom    int
+	Top       int
+	LineSpace int
 }
 
 type Configure struct {
-	Width int
+	Width   int
 	BgColor Color
 }
 
@@ -71,7 +72,6 @@ func (this *TextPicture) Draw(writer io.Writer, filetype int) error {
 	height := 0
 	width := this.conf.Width
 	rgba := image.NewRGBA(image.Rect(0, 0, width, height))
-
 	for _, v := range this.lines {
 		height += v.getHeight(width, rgba)
 	}
